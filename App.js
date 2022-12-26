@@ -21,22 +21,21 @@ function App() {
 
   const [moviesState, setMoviesState] = useState(dummyMovies);
 
-  const getStarWarsMovies = () => {
-    fetch("https://swapi.dev/api/films/")
-      .then((Response) => {
-        return Response.json();
-      })
-      .then((data) => {
-        const moviesFormated = data.results.map((movie) => {
-          return {
-            id: movie.episode_id,
-            title: movie.title,
-            releaseDate: movie.release_date,
-            openingText: movie.opening_crawl,
-          };
-        });
-        setMoviesState(moviesFormated);
-      });
+  const getStarWarsMovies = async () => {
+    const starWarsMoviesResponse = await fetch(
+      "https://swapi.dev/api/films/"
+    ).then((Response) => {
+      return Response.json();
+    });
+    const moviesFormated = starWarsMoviesResponse.results.map((movie) => {
+      return {
+        id: movie.episode_id,
+        title: movie.title,
+        releaseDate: movie.release_date,
+        openingText: movie.opening_crawl,
+      };
+    });
+    setMoviesState(moviesFormated);
   };
 
   return (
