@@ -28,13 +28,14 @@ function App() {
     setErrorState(null);
 
     try {
-      const starWarsMoviesResponse = await fetch("https://swapi.dev/api/films/")
-        .then((Response) => {
-          return Response.json();
-        })
-        .catch((e) => {
-          throw e;
-        });
+      const starWarsMoviesResponse = await fetch(
+        "https://swapi.dev/api/films/"
+      ).then((Response) => {
+        if (!Response.ok) {
+          throw new Error(Response.status);
+        }
+        return Response.json();
+      });
       const moviesFormated = starWarsMoviesResponse.results.map((movie) => {
         return {
           id: movie.episode_id,
@@ -46,7 +47,7 @@ function App() {
       setMoviesState(moviesFormated);
       setIsLoading(false);
     } catch (error) {
-      setErrorState(error.message + "errorfilms");
+      setErrorState(error + ".  Something went wrong");
     }
     setIsLoading(false);
   };
