@@ -20,22 +20,35 @@ function App() {
   ];
 
   const [moviesState, setMoviesState] = useState(dummyMovies);
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorState, setErrorState] = useState(null);
 
   const getStarWarsMovies = async () => {
-    const starWarsMoviesResponse = await fetch(
-      "https://swapi.dev/api/films/"
-    ).then((Response) => {
-      return Response.json();
-    });
-    const moviesFormated = starWarsMoviesResponse.results.map((movie) => {
-      return {
-        id: movie.episode_id,
-        title: movie.title,
-        releaseDate: movie.release_date,
-        openingText: movie.opening_crawl,
-      };
-    });
-    setMoviesState(moviesFormated);
+    setIsLoading(true);
+    setErrorState(null);
+
+    try {
+      const starWarsMoviesResponse = await fetch("https://swapi.dev/api/films/")
+        .then((Response) => {
+          return Response.json();
+        })
+        .catch((e) => {
+          throw e;
+        });
+      const moviesFormated = starWarsMoviesResponse.results.map((movie) => {
+        return {
+          id: movie.episode_id,
+          title: movie.title,
+          releaseDate: movie.release_date,
+          openingText: movie.opening_crawl,
+        };
+      });
+      setMoviesState(moviesFormated);
+      setIsLoading(false);
+    } catch (error) {
+      setErrorState(error.message + "errorfilms");
+    }
+    setIsLoading(false);
   };
 
   return (
@@ -44,7 +57,9 @@ function App() {
         <button onClick={getStarWarsMovies}>Fetch Movies</button>
       </section>
       <section>
-        <MoviesList movies={moviesState} />
+        {isLoading && <p>loading movies</p>}
+        {errorState && <p>{errorState}</p>}
+        {!isLoading && !errorState && <MoviesList movies={moviesState} />}
       </section>
     </>
   );
