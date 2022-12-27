@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import MoviesList from "./components/MoviesList";
 import "./App.css";
@@ -22,6 +22,10 @@ function App() {
   const [moviesState, setMoviesState] = useState(dummyMovies);
   const [isLoading, setIsLoading] = useState(false);
   const [errorState, setErrorState] = useState(null);
+
+  useEffect(() => {
+    getStarWarsMovies();
+  }, []);
 
   const getStarWarsMovies = async () => {
     setIsLoading(true);
